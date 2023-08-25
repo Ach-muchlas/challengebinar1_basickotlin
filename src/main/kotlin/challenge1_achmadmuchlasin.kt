@@ -1,5 +1,3 @@
-
-
 data class MenuItem(val name: String, val price: Int)
 
 class Order(private val menuItems: List<MenuItem>) {
@@ -53,6 +51,7 @@ class PaymentProcess {
 
 interface DeliveryMethod {
     fun initiateDelivery()
+    fun initiateNameMethod(): String
 }
 
 class TakeAway : DeliveryMethod {
@@ -62,18 +61,27 @@ class TakeAway : DeliveryMethod {
             Thread.sleep(1000)
             print(".")
         }
+        println()
+    }
+
+    override fun initiateNameMethod(): String {
+        return "Take Away"
     }
 }
 
 class Delivery : DeliveryMethod {
     override fun initiateDelivery() {
-        print("Driver dalam perjalanan!")
+        print("Driver dalam perjalanan! (5 detik)")
         for (i in 1..5) {
             Thread.sleep(1000)
             print(".")
         }
         println()
-        println("Driver telah tiba!")
+        print("Driver sampai! ")
+    }
+
+    override fun initiateNameMethod(): String {
+        return "Delivery"
     }
 }
 
@@ -144,14 +152,22 @@ fun main() {
             val inputPayment = readln().toInt()
             val paymentResult = paymentProcess.processPayment(inputPayment, totalPayment)
             println(paymentResult)
-        } while (inputPayment != totalPayment && inputPayment >= totalPayment)
+        } while (inputPayment < totalPayment)
 
         repeat(40) { print("=") }
         println()
+//
+//        for ((index, method) in listOf("Take Away", "Delivery").withIndex()) {
+//            println("${index + 1}. $method")
+//        }
 
-        for ((index, method) in listOf("Take Away", "Delivery").withIndex()) {
+        for ((index, method) in listOf(takeAway.initiateNameMethod(), delivery.initiateNameMethod()).withIndex()){
             println("${index + 1}. $method")
         }
+//        val nameMethodDelivery = listOf(1 to takeAway.initiateNameMethod(), 2 to delivery.initiateNameMethod())
+//        for (i in nameMethodDelivery.indices){
+//            println(i)
+//        }
 
         do {
             print("pilih metode pengantaran makanan yang kamu inginm kan, pilih sesuai dengan angka yang ada : ")
@@ -161,10 +177,12 @@ fun main() {
                     deliveryService.initiateDelivery(takeAway)
                     break
                 }
+
                 2 -> {
                     deliveryService.initiateDelivery(delivery)
                     break
                 }
+
                 else -> {
                     println("Try Again, Your choose is wrong")
                 }
