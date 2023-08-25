@@ -156,18 +156,11 @@ fun main() {
 
         repeat(40) { print("=") }
         println()
-//
-//        for ((index, method) in listOf("Take Away", "Delivery").withIndex()) {
-//            println("${index + 1}. $method")
-//        }
 
         for ((index, method) in listOf(takeAway.initiateNameMethod(), delivery.initiateNameMethod()).withIndex()){
             println("${index + 1}. $method")
         }
-//        val nameMethodDelivery = listOf(1 to takeAway.initiateNameMethod(), 2 to delivery.initiateNameMethod())
-//        for (i in nameMethodDelivery.indices){
-//            println(i)
-//        }
+
 
         do {
             print("pilih metode pengantaran makanan yang kamu inginm kan, pilih sesuai dengan angka yang ada : ")
