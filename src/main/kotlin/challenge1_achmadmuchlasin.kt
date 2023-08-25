@@ -1,14 +1,4 @@
-import java.text.NumberFormat
-import java.util.Locale
-
-class MenuItem(val name: String, val price: Int) {
-    fun formattedPrice(): String {
-        val currencyFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-        val formattedCurrency = currencyFormat.format(price)
-
-        return formattedCurrency.replace(",00", "")
-    }
-}
+data class MenuItem(val name: String, val price: Int)
 
 class Order(private val menuItems: List<MenuItem>) {
     private val selectedItem = mutableListOf<MenuItem>()
@@ -16,7 +6,7 @@ class Order(private val menuItems: List<MenuItem>) {
     /*function to display list menu*/
     fun displayMenu() {
         for ((index, item) in menuItems.withIndex()) {
-            println("${index + 1}. ${item.name.padEnd(20, ' ')} : ${item.formattedPrice().padStart(14, ' ')}")
+            println("${index + 1}. ${item.name.padEnd(20, ' ')} : ${item.price.toString().padStart(14, ' ')}")
         }
     }
 
@@ -31,7 +21,7 @@ class Order(private val menuItems: List<MenuItem>) {
             selectedItem.add(menuItems[itemIndex - 1])
             println("Kamu memmilih menu $itemIndex")
             println("Nama Menu : ${menuItems[itemIndex - 1].name}")
-            println("Harga \t  : ${menuItems[itemIndex - 1].formattedPrice()}")
+            println("Harga \t  : ${menuItems[itemIndex - 1].price}")
         } else {
             println("Pilihan Tidak valid")
         }
