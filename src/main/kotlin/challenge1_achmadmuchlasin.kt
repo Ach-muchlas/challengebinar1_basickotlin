@@ -1,3 +1,5 @@
+
+
 data class MenuItem(val name: String, val price: Int)
 
 class Order(private val menuItems: List<MenuItem>) {
@@ -49,36 +51,41 @@ class PaymentProcess {
     }
 }
 
-class DeliveryService {
+interface DeliveryMethod {
+    fun initiateDelivery()
+}
 
-    /* function to check method*/
-    fun initialDelivery(isTakeAway: Boolean) {
+class TakeAway : DeliveryMethod {
+    override fun initiateDelivery() {
+        print("Makananmu sudah siap! Silakan ambil di resto ya! (5 detik)")
+        for (i in 1..5) {
+            Thread.sleep(1000)
+            print(".")
+        }
+    }
+}
+
+class Delivery : DeliveryMethod {
+    override fun initiateDelivery() {
+        print("Driver dalam perjalanan!")
+        for (i in 1..5) {
+            Thread.sleep(1000)
+            print(".")
+        }
+        println()
+        println("Driver telah tiba!")
+    }
+}
+
+class DeliveryService {
+    fun initiateDelivery(deliveryMethod: DeliveryMethod) {
         print("Makanan akan siap (5 detik)")
         for (i in 1..5) {
             Thread.sleep(1000)
             print(".")
         }
         println()
-
-        /*check method*/
-        if (isTakeAway) {
-            print("Makananmu sudah siap! Silakan ambil di resto ya! (5 detik)")
-            for (i in 1..5) {
-                Thread.sleep(1000)
-                print(".")
-            }
-            println()
-        } else {
-            print("Makananmu Sudah siap Driver segera menuju tempatmu! (5 detik)")
-            for (i in 1..5) {
-                Thread.sleep(1000)
-                print(".")
-            }
-            println()
-
-            print("Driver Sampai! ")
-        }
-
+        deliveryMethod.initiateDelivery()
         print("Pesanan Selesai! (3 detik)")
         for (i in 1..3) {
             Thread.sleep(1000)
@@ -104,10 +111,12 @@ fun main() {
     val order = Order(menuItems)
     val paymentProcess = PaymentProcess()
     val deliveryService = DeliveryService()
+    val takeAway = TakeAway()
+    val delivery = Delivery()
 
     while (true) {
 
-        var inputMethod : Int
+        var inputMethod: Int
 
         /*call function display from class order*/
         println()
@@ -137,7 +146,7 @@ fun main() {
             println(paymentResult)
         } while (inputPayment != totalPayment && inputPayment >= totalPayment)
 
-        repeat(40){ print("=") }
+        repeat(40) { print("=") }
         println()
 
         for ((index, method) in listOf("Take Away", "Delivery").withIndex()) {
@@ -149,24 +158,19 @@ fun main() {
             inputMethod = readln().toInt()
             when (inputMethod) {
                 1 -> {
+                    deliveryService.initiateDelivery(takeAway)
                     break
                 }
-
                 2 -> {
+                    deliveryService.initiateDelivery(delivery)
                     break
                 }
-                else ->{
-                    println("Try Again, your choose is wrong")
+                else -> {
+                    println("Try Again, Your choose is wrong")
                 }
             }
-
         } while (true)
 
-        val isTakeAway = inputMethod == 1
-        deliveryService.initialDelivery(isTakeAway)
-
-        repeat(40){ print("=") }
-        println()
 
         // clear data
         order.clearSelectedItems()
